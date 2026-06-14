@@ -13,6 +13,6 @@ I wish people can make rhythm games more easily, so I made this stuff. With Zynt
 
 * * *
 ## 🔨 Development
-This library must be used within Unity with version 2022.3 and newer.
+This library must be used within Unity with version 2022.3 or newer.
 
 That's it and I don't expect this to be found by people.
