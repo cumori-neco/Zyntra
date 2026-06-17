@@ -1,5 +1,7 @@
 using UnityEngine;
 using Zyntra.Audio;
+using Zyntra.Data;
+using Zyntra.Scoring;
 
 namespace Zyntra.Player
 {
@@ -10,11 +12,15 @@ namespace Zyntra.Player
         [SerializeField] private Conductor audioConductor;
         public static Conductor AudioConductor;
 
+        public static ScoreResult currentScore;
+        public static LevelData levelData;
+
         private void Start()
         {
             // The static variables
             Settings = gameSettings;
             AudioConductor = audioConductor;
+            currentScore = new ScoreResult(levelData);
         }
     }
 }
