@@ -6,7 +6,6 @@ namespace Zyntra
     public class GameSettings : ScriptableObject
     {
         [Header("General Information")] public string gameName;
-        public Sprite gameIcon;
 
         [Space] [Header("Game Rules")] public double noteSpeed = 6.0;
         public bool allowOptionalNoteSpeed;
