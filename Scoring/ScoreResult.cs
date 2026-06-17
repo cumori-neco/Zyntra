@@ -1,6 +1,7 @@
 using System;
 using Zyntra.Data;
 using Zyntra.Judgements;
+using Zyntra.Player;
 
 namespace Zyntra.Scoring
 {
@@ -22,6 +23,8 @@ namespace Zyntra.Scoring
         
         public uint Combo { get; set; }
         public uint MaxCombo { get; set; }
+        
+        public bool IsFailed { get; set; }
 
         private readonly uint _noteCount;
         private double _scorePerPerfect;
@@ -75,7 +78,7 @@ namespace Zyntra.Scoring
             
             Accuracy = (float)_currentRawAcc;
             
-            if(weight == 0)
+            if(weight == 0 || (weight == 0.25 && ZyntraPlayerManager.Settings.comboBreakOnGood))
             {
                 Combo = 0;
             }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Zyntra
+namespace Zyntra.Player
 {
     [CreateAssetMenu(fileName = "ZyntraGameGeneralSettings", menuName = "Zyntra/General Game Settings", order = 3)]
     public class GameSettings : ScriptableObject
