@@ -4,16 +4,16 @@ namespace Zyntra.Objects.Notes
     {
         // To be added
         // public virtual Judgement judgement;
-        
+
         public bool IsProceed { get; set; }
-        
+
         public double TimeTillProceed { get; set; } // the metric here is ms
 
         public virtual void UpdateRemainTime(double currentTime)
         {
             TimeTillProceed = (currentTime - time) * 1000.0;
         }
-        
+
         public virtual void Hit()
         {
             IsProceed = true;
@@ -22,6 +22,16 @@ namespace Zyntra.Objects.Notes
         public virtual void Miss()
         {
             IsProceed = true;
+        }
+
+        // For my old code
+        public Note()
+        {
+        }
+
+        public Note(double desiredTime)
+        {
+            time = desiredTime;
         }
     }
 }

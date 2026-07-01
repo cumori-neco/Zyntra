@@ -14,5 +14,15 @@ namespace Zyntra.Objects.Events
             if (conductor != null)
                 conductor.UpdateBPM(targetBPM, time);
         }
+        
+        // For my old code
+        public BPMEvent()
+        {
+        }
+
+        public BPMEvent(double BPM)
+        {
+            targetBPM = BPM;
+        }
     }
 }
