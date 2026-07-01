@@ -17,9 +17,9 @@ namespace Zyntra.Data
             Metadata = metadata;
         }
 
-        public LevelData LoadFullLevelData()
+        public LevelData LoadFullLevelData(string diffName)
         {
-            string jsonPath = Path.Combine(FolderPath, "level.json");
+            string jsonPath = Path.Combine(FolderPath, diffName);
             if (!File.Exists(jsonPath)) return null;
             
             string rawJson = File.ReadAllText(jsonPath);
