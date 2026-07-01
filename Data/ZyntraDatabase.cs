@@ -7,50 +7,64 @@ namespace Zyntra.Data
 {
     public class ZyntraDatabase
     {
-       public string DatabaseRootPath { get; private set; }
+        public static ZyntraDatabase Instance { get; private set; }
 
-       public List<LevelDataProfile> LoadedProfiles { get; private set; } = new List<LevelDataProfile>();
+        public string DatabaseRootPath { get; private set; }
 
-       public ZyntraDatabase(string path)
-       {
-           DatabaseRootPath = Path.Combine(path, "ZyntraDatabase");
+        public List<LevelDataProfile> LoadedProfiles { get; private set; } = new List<LevelDataProfile>();
 
-           if (!Directory.Exists(DatabaseRootPath))
-           {
-               Directory.CreateDirectory(DatabaseRootPath);
-           }
-       }
+        public static void Initialize(string basePath)
+        {
+            if (Instance != null)
+            {
+                Debug.LogWarning("[Zyntra/Data] ZyntraDatabase has already been initialized!");
+            }
+            
+            Instance = new ZyntraDatabase(basePath);
+            Instance.ScanAndLoadProfiles();
+        }
+        
+        private ZyntraDatabase(string path)
+        {
+            DatabaseRootPath = Path.Combine(path, "ZyntraDatabase");
 
-       public void ScanAndLoadProfiles()
-       {
-           LoadedProfiles.Clear();
+            if (!Directory.Exists(DatabaseRootPath))
+            {
+                Directory.CreateDirectory(DatabaseRootPath);
+            }
+        }
 
-           if (!Directory.Exists(DatabaseRootPath)) return;
-           
-           string[] levelFolders = Directory.GetDirectories(DatabaseRootPath);
+        public void ScanAndLoadProfiles()
+        {
+            LoadedProfiles.Clear();
 
-           foreach (string folderPath in levelFolders)
-           {
-               string jsonPath = Path.Combine(folderPath, "level.json");
-               
-               if (!File.Exists(jsonPath)) continue;
+            if (!Directory.Exists(DatabaseRootPath)) return;
 
-               try
-               {
-                   string rawJson = File.ReadAllText(jsonPath);
+            string[] levelFolders = Directory.GetDirectories(DatabaseRootPath);
 
-                   LevelDataSet partialLoader = JsonUtility.FromJson<LevelDataSet>(rawJson);
+            foreach (string folderPath in levelFolders)
+            {
+                string setJsonPath = Path.Combine(folderPath, "level.json");
 
-                   if (partialLoader != null)
-                   {
-                       LevelDataProfile profile = new LevelDataProfile(folderPath, partialLoader);
-                   }
-               }
-               catch (Exception e)
-               {
-                   Debug.LogError($"[Zyntra/Data] Failed to read metadata at {jsonPath}: {e.Message}");
-               }
-           }
-       }
+                if (!File.Exists(setJsonPath)) continue;
+
+                try
+                {
+                    string rawJson = File.ReadAllText(setJsonPath);
+
+                    LevelDataSet partialLoader = JsonUtility.FromJson<LevelDataSet>(rawJson);
+
+                    if (partialLoader != null)
+                    {
+                        LevelDataProfile profile = new LevelDataProfile(folderPath, partialLoader);
+                        LoadedProfiles.Add(profile);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[Zyntra/Data] Failed to read metadata at {setJsonPath}: {e.Message}");
+                }
+            }
+        }
     }
 }

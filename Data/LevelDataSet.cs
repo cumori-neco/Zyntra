@@ -1,11 +1,14 @@
-using System.Collections.Generic;
+using System;
 
 namespace Zyntra.Data
 {
+    [Serializable]
     public class LevelDataSet
     {
-        public string Name { get; set; }
-        public string Author { get; set; }
-        public string GameName { get; set; }
+        public string Name;
+        public string Author;
+        public string GameName;
+
+        public string[] LevelFiles;
     }
 }
