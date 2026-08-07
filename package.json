@@ -1,0 +1,12 @@
+{
+  "name": "com.NecoDev.Zyntra",
+  "displayName": "Zyntra",
+  "version": "0.0.0",
+  "description": "A simple rhythm game engine for Unity that nobody asked for.",
+  "unity": "2022.3",
+  "author": {
+    "name": "NecoDev (Cumori)",
+    "email" : "necodev@icloud.com",
+    "url" : "https://www.github.com/cumori-neco/Zyntra"
+  }
+}
