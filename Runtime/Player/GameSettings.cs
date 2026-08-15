@@ -8,13 +8,16 @@ namespace Zyntra.Player
         [Header("General Information")] public string gameName;
 
         [Space] [Header("Game Rules")] public double noteSpeed = 6.0;
-        public bool allowOptionalNoteSpeed;
         
         [Tooltip("Cut the combo if a \"Good\" judgement is made.")]
         public bool comboBreakOnGood = true;
 
         [Tooltip("If the game will use the health system or not.")]
         public bool useHealth = false;
+        
+        public int defaultHealth = 1000;
+        public int maxHealth = 2000;
+        public int healthDamage = 100;
 
         public enum DeathTrigger
         {

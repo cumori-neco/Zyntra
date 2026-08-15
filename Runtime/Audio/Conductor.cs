@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using Zyntra.Objects.Notes;
 using Zyntra.Objects;
+using Event = Zyntra.Objects.Events.Event;
 
 namespace Zyntra.Audio
 {
@@ -23,11 +22,12 @@ namespace Zyntra.Audio
         public bool IsPlaying { get; private set; }
         public double secPerBeat;
 
-        [Header("Timeline")] public List<TimelineObject> TimelineObjects = new List<TimelineObject>();
-        private int _nextObjectIndex = 0;
+        [Header("Timeline")] public List<TimelineObject> TimelineObjects = new
+            ();
+        private int _nextObjectIndex;
 
-        private double _beatOffset = 0;
-        private double _timeAtLastBPMChange = 0;
+        private double _beatOffset;
+        private double _timeAtLastBPMChange;
 
         public void PlaySong(AudioClip clip, double startDelay = 2.0)
         {
@@ -40,7 +40,7 @@ namespace Zyntra.Audio
             IsPlaying = true;
         }
 
-        void Update()
+        private void Update()
         {
             if (!IsPlaying) return;
 
@@ -50,8 +50,8 @@ namespace Zyntra.Audio
 
             while (_nextObjectIndex < TimelineObjects.Count && CurrentSongTime >= TimelineObjects[_nextObjectIndex].time)
             {
-                TimelineObject currentObject = TimelineObjects[_nextObjectIndex];
-                if (currentObject is Objects.Events.Event e)
+                var currentObject = TimelineObjects[_nextObjectIndex];
+                if (currentObject is Event e)
                 {
                     e.EventAction();
                 }
@@ -72,7 +72,7 @@ namespace Zyntra.Audio
         /// <param name="eventTimestamp">When the change happens</param>
         public void UpdateBPM(double newBPM, double eventTimestamp)
         {
-            double timeSinceLastChange = eventTimestamp - _timeAtLastBPMChange;
+            var timeSinceLastChange = eventTimestamp - _timeAtLastBPMChange;
 
             secPerBeat = 60.0 / bpm; // ^^^
 

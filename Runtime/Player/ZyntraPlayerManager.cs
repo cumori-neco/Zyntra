@@ -15,12 +15,33 @@ namespace Zyntra.Player
         public static ScoreResult currentScore;
         public static LevelData levelData;
 
+        public int health = Settings.defaultHealth;
+
         private void Start()
         {
             // The static variables
             Settings = gameSettings;
             AudioConductor = audioConductor;
             currentScore = new ScoreResult(levelData);
+        }
+
+        public void DamagePlayer()
+        {
+            if (!Settings.useHealth) return;
+            health -= Settings.healthDamage;
+
+            if (health <= 0 && Settings.deathTrigger == GameSettings.DeathTrigger.Ignore) Fail();
+        }
+
+        public void Fail()
+        {
+            Time.timeScale = 0f;
+        }
+
+        public void AddHealth(int amount)
+        {
+            health += amount;
+            if (health > Settings.defaultHealth) health = Settings.defaultHealth;
         }
     }
 }
