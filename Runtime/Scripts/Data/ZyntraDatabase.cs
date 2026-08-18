@@ -11,7 +11,7 @@ namespace Zyntra.Data
 
         public string DatabaseRootPath { get; private set; }
 
-        public List<LevelDataProfile> LoadedProfiles { get; private set; } = new List<LevelDataProfile>();
+        public List<LevelDataProfile> LoadedProfiles { get; private set; } = new();
 
         public static void Initialize(string basePath)
         {
@@ -40,19 +40,19 @@ namespace Zyntra.Data
 
             if (!Directory.Exists(DatabaseRootPath)) return;
 
-            string[] levelFolders = Directory.GetDirectories(DatabaseRootPath);
+            var levelFolders = Directory.GetDirectories(DatabaseRootPath);
 
-            foreach (string folderPath in levelFolders)
+            foreach (var folderPath in levelFolders)
             {
-                string setJsonPath = Path.Combine(folderPath, "level.json");
+                var setJsonPath = Path.Combine(folderPath, "level.json");
 
                 if (!File.Exists(setJsonPath)) continue;
 
                 try
                 {
-                    string rawJson = File.ReadAllText(setJsonPath);
+                    var rawJson = File.ReadAllText(setJsonPath);
 
-                    LevelDataSet partialLoader = JsonUtility.FromJson<LevelDataSet>(rawJson);
+                    var partialLoader = JsonUtility.FromJson<LevelDataSet>(rawJson);
 
                     if (partialLoader != null)
                     {

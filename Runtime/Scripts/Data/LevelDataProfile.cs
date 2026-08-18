@@ -19,10 +19,10 @@ namespace Zyntra.Data
 
         public LevelData LoadFullLevelData(string diffName)
         {
-            string jsonPath = Path.Combine(FolderPath, diffName);
+            var jsonPath = Path.Combine(FolderPath, diffName);
             if (!File.Exists(jsonPath)) return null;
             
-            string rawJson = File.ReadAllText(jsonPath);
+            var rawJson = File.ReadAllText(jsonPath);
             return JsonUtility.FromJson<LevelData>(rawJson);
         }
     }
