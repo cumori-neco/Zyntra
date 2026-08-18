@@ -1,6 +1,7 @@
 using UnityEngine;
 using Zyntra.Audio;
 using Zyntra.Data;
+using Zyntra.Judgements;
 using Zyntra.Scoring;
 
 namespace Zyntra.Player
@@ -11,11 +12,13 @@ namespace Zyntra.Player
         public static GameSettings Settings;
         [SerializeField] private Conductor audioConductor;
         public static Conductor AudioConductor;
+        [SerializeField] private HitWindow hitWindow;
+        public static HitWindow HitWindow;
 
         public static ScoreResult currentScore;
         public static LevelData levelData;
 
-        public int health = Settings.defaultHealth;
+        public int health = 1000;
 
         private void Start()
         {
@@ -23,6 +26,8 @@ namespace Zyntra.Player
             Settings = gameSettings;
             AudioConductor = audioConductor;
             currentScore = new ScoreResult(levelData);
+            HitWindow = hitWindow;
+            health = gameSettings.defaultHealth;
         }
 
         public void DamagePlayer()

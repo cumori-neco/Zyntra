@@ -49,26 +49,35 @@ namespace Zyntra.Scoring
             MaxCombo = 0;
         }
 
+        public ScoreResult(int objCount)
+        {
+            _noteCount = (uint)objCount;
+
+            if (_noteCount != 0)
+            {
+                _scorePerPerfect = Math.Abs(1000000.0 / _noteCount);
+                _accPerPerfect = objCount / 100.0;
+            }
+
+            Score = 0;
+            Accuracy = 0f;
+            Combo = 0;
+            MaxCombo = 0; 
+        }
+
         public void AddJudgement(JudgementType type)
         {
             double weight = 0;
             if (_noteCount == 0) return;
 
-            switch (type)
+            weight = type switch
             {
-                case JudgementType.Perfect:
-                    weight = 1.0;
-                    break;
-                case JudgementType.Great:
-                    weight = 0.5;
-                    break;
-                case JudgementType.Good:
-                    weight = 0.25;
-                    break;
-                case JudgementType.Miss:
-                    weight = 0;
-                    break;
-            }
+                JudgementType.Perfect => 1.0,
+                JudgementType.Great => 0.5,
+                JudgementType.Good => 0.25,
+                JudgementType.Miss => 0,
+                _ => weight
+            };
 
             _currentRawScore += _scorePerPerfect * weight;
             
