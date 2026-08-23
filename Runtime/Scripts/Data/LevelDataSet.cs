@@ -3,12 +3,15 @@ using System;
 namespace Zyntra.Data
 {
     [Serializable]
-    public class LevelDataSet
+    public class LevelMetaData
     {
-        public string Name;
-        public string Author;
-        public string GameName;
+        public string name;
+        public string romanizedName;
+        
+        public string author;
+        public string gameName;
 
-        public string[] LevelFiles;
+        public string[] levelFiles;
+        public string songLocation;
     }
 }

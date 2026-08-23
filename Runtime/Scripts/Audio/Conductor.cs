@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Zyntra.Objects;
@@ -8,10 +9,10 @@ namespace Zyntra.Audio
     /// <summary>
     /// A component used to play music and handle events.
     /// </summary>
+    
+    [RequireComponent(typeof(AudioSource))]
     public class Conductor : MonoBehaviour
     {
-        public AudioSource musicSource;
-
         [Header("Live Data")] public double bpm;
         public double songOffset;
 
@@ -28,6 +29,13 @@ namespace Zyntra.Audio
 
         private double _beatOffset;
         private double _timeAtLastBPMChange;
+        
+        private AudioSource musicSource;
+
+        private void Start()
+        {
+            musicSource = GetComponent<AudioSource>();
+        }
 
         public void PlaySong(AudioClip clip, double startDelay = 2.0)
         {
