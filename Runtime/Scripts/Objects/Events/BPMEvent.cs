@@ -1,8 +1,10 @@
+using System;
 using Zyntra.Audio;
 using Zyntra.Player;
 
 namespace Zyntra.Objects.Events
 {
+    [Serializable]
     public class BPMEvent : Event
     {
         public double targetBPM;

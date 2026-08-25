@@ -1,5 +1,8 @@
+using System;
+
 namespace Zyntra.Objects.Notes
 {
+    [Serializable]
     public class Note : TimelineObject, INote
     {
         // To be added
