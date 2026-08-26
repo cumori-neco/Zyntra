@@ -14,6 +14,13 @@ namespace Zyntra.Data
     }
 
     [Serializable]
+    public class SerializedMetadataWrapper
+    {
+        public string typeName;
+        public string jsonContent;
+    }
+
+    [Serializable]
     public class LevelDataDTO
     {
         public List<SerializedObjectWrapper> objects = new();
@@ -21,14 +28,36 @@ namespace Zyntra.Data
 
     public static class DataManager
     {
-        public static LevelMetadata BuildLevel(
+        private static readonly Dictionary<string, Type> TypeCache = new();
+
+        private static Type ResolveType(string typeName)
+        {
+            if (string.IsNullOrEmpty(typeName)) return null;
+
+            if (TypeCache.TryGetValue(typeName, out var cachedType))
+                return cachedType;
+
+            var type = Type.GetType(typeName);
+
+            if (type == null)
+            {
+                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    type = assembly.GetType(typeName);
+                    if (type != null) break;
+                }
+            }
+
+            if (type != null)
+                TypeCache[typeName] = type;
+
+            return type;
+        }
+
+        public static TMetadata BuildLevel<TMetadata>(
             string targetDirectory,
-            string levelName,
-            string romanizedName,
-            string author,
-            string songLocation,
-            string gameName,
-            List<LevelData> levelDataList)
+            TMetadata metadata,
+            List<LevelData> levelDataList) where TMetadata : LevelMetadata
         {
             if (string.IsNullOrEmpty(targetDirectory))
                 throw new ArgumentException("[Zyntra] Failed to build level : Target directory can't be null or empty.",
@@ -46,28 +75,21 @@ namespace Zyntra.Data
                 var fullPath = Path.Combine(targetDirectory, diffName);
 
                 SaveLevelDataToFile(levelDataList[i], fullPath);
-                generatedFiles.Add(fullPath);
+                generatedFiles.Add(diffName);
             }
 
-            var metadata = new LevelMetadata
-            {
-                name = levelName,
-                author = author,
-                songLocation = songLocation,
-                gameName = gameName,
-                romanizedName = romanizedName,
-                levelFiles = generatedFiles.ToArray()
-            };
+            metadata.levelFiles = generatedFiles.ToArray();
 
             var metadataPath = Path.Combine(targetDirectory, "metadata.json");
-            SaveMetadataToFile(metadata, metadataPath);
+            var metadataJson = SaveMetadata(metadata);
+            File.WriteAllText(metadataPath, metadataJson);
 
             return metadata;
         }
 
         public static string SaveLevelData(LevelData levelData)
         {
-            if (levelData == null) throw new ArgumentException(nameof(levelData));
+            if (levelData == null) throw new ArgumentNullException(nameof(levelData));
 
             var dto = new LevelDataDTO();
 
@@ -80,13 +102,13 @@ namespace Zyntra.Data
                 if (!objectType.IsDefined(typeof(SerializableAttribute), false))
                 {
                     throw new InvalidOperationException(
-                        $"[Zyntra] Cannot serialize '{objectType.Name}'" +
+                        $"[Zyntra] Cannot serialize '{objectType.Name}' " +
                         "Classes inheriting from TimelineObject MUST be marked as Serializable!");
                 }
 
                 dto.objects.Add(new SerializedObjectWrapper
                 {
-                    typeName = objectType.AssemblyQualifiedName,
+                    typeName = objectType.FullName,
                     jsonContent = JsonUtility.ToJson(obj)
                 });
             }
@@ -110,7 +132,7 @@ namespace Zyntra.Data
             {
                 if (string.IsNullOrEmpty(wrapper.typeName)) continue;
 
-                var type = Type.GetType(wrapper.typeName);
+                var type = ResolveType(wrapper.typeName);
                 if (type != null)
                 {
                     var reconstructedObj = (TimelineObject)JsonUtility.FromJson(wrapper.jsonContent, type);
@@ -125,18 +147,47 @@ namespace Zyntra.Data
             return levelData;
         }
 
-        public static string SaveMetadata(LevelMetadata metadata)
+        public static string SaveMetadata<T>(T metadata) where T : LevelMetadata
         {
-            return metadata == null
-                ? throw new ArgumentException(nameof(metadata))
-                : JsonUtility.ToJson(metadata, true);
+            if (metadata == null) throw new ArgumentException(nameof(metadata));
+
+            var type = metadata.GetType();
+
+            if (!type.IsDefined(typeof(SerializableAttribute), false))
+            {
+                throw new InvalidOperationException(
+                    $"[Zyntra] Cannot serialize '{type.Name}' " +
+                    "Classes inheriting from LevelMetadata MUST be marked as Serializable!");
+            }
+
+            var wrapper = new SerializedMetadataWrapper
+            {
+                typeName = type.FullName,
+                jsonContent = JsonUtility.ToJson(metadata)
+            };
+
+            return JsonUtility.ToJson(wrapper, true);
         }
 
         public static LevelMetadata LoadMetadata(string jsonContent)
         {
-            return string.IsNullOrEmpty(jsonContent)
-                ? new LevelMetadata()
-                : JsonUtility.FromJson<LevelMetadata>(jsonContent);
+            if (string.IsNullOrEmpty(jsonContent)) return new LevelMetadata();
+
+            var wrapper = JsonUtility.FromJson<SerializedMetadataWrapper>(jsonContent);
+
+            if (wrapper == null &&
+                (string.IsNullOrEmpty(wrapper.typeName) || string.IsNullOrEmpty(wrapper.jsonContent)))
+                return JsonUtility.FromJson<LevelMetadata>(jsonContent);
+            var type = ResolveType(wrapper.typeName);
+            if (type != null)
+            {
+                return (LevelMetadata)JsonUtility.FromJson(wrapper.jsonContent, type);
+            }
+
+            Debug.LogWarning($"[Zyntra] Could not resolve type '{wrapper.typeName}'");
+            JsonUtility.FromJson<LevelMetadata>(wrapper.jsonContent);
+
+            return JsonUtility.FromJson<LevelMetadata>(jsonContent);
         }
 
         public static void SaveLevelDataToFile(LevelData levelData, string filePath)
@@ -152,7 +203,7 @@ namespace Zyntra.Data
             return new LevelData();
         }
 
-        public static void SaveMetadataToFile(LevelMetadata metadata, string filePath)
+        public static void SaveMetadataToFile<T>(T metadata, string filePath) where T : LevelMetadata
         {
             var json = SaveMetadata(metadata);
             File.WriteAllText(filePath, json);
