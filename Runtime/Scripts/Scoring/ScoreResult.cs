@@ -48,6 +48,22 @@ namespace Zyntra.Scoring
             Combo = 0;
             MaxCombo = 0;
         }
+        
+        public ScoreResult(LevelData lvl,  uint objCount)
+        {
+            _noteCount = objCount;
+
+            if (_noteCount != 0)
+            {
+                _scorePerPerfect = Math.Abs(1000000.0 / _noteCount);
+                _accPerPerfect = lvl.Objects.Count / 100.0;
+            }
+
+            Score = 0;
+            Accuracy = 0f;
+            Combo = 0;
+            MaxCombo = 0;
+        }
 
         public ScoreResult(int objCount)
         {
