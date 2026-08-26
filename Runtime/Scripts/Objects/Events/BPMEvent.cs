@@ -22,9 +22,10 @@ namespace Zyntra.Objects.Events
         {
         }
 
-        public BPMEvent(double BPM)
+        public BPMEvent(double BPM, double time)
         {
             targetBPM = BPM;
+	    time = time;
         }
     }
 }

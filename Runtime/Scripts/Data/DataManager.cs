@@ -185,9 +185,7 @@ namespace Zyntra.Data
             }
 
             Debug.LogWarning($"[Zyntra] Could not resolve type '{wrapper.typeName}'");
-            JsonUtility.FromJson<LevelMetadata>(wrapper.jsonContent);
-
-            return JsonUtility.FromJson<LevelMetadata>(jsonContent);
+            return JsonUtility.FromJson<LevelMetadata>(wrapper.jsonContent);
         }
 
         public static void SaveLevelDataToFile(LevelData levelData, string filePath)
