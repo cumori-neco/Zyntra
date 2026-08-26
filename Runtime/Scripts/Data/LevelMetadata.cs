@@ -3,7 +3,7 @@ using System;
 namespace Zyntra.Data
 {
     [Serializable]
-    public class LevelMetaData
+    public class LevelMetadata
     {
         public string name;
         public string romanizedName;
