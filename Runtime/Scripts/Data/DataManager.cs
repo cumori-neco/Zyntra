@@ -1,3 +1,6 @@
+// Data management has always been the pain when developing a project, also
+// todo: Check null errors cause I believe there are some.
+
 using System;
 using System.IO;
 using System.Collections.Generic;
