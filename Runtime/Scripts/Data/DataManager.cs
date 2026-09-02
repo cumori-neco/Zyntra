@@ -179,6 +179,7 @@ namespace Zyntra.Data
             var wrapper = JsonUtility.FromJson<SerializedMetadataWrapper>(jsonContent);
 
             if (wrapper == null &&
+                // ReSharper disable once PossibleNullReferenceException
                 (string.IsNullOrEmpty(wrapper.typeName) || string.IsNullOrEmpty(wrapper.jsonContent)))
                 return JsonUtility.FromJson<LevelMetadata>(jsonContent);
             var type = ResolveType(wrapper.typeName);

@@ -12,7 +12,7 @@ namespace Zyntra.Audio
     public class Conductor : MonoBehaviour
     {
         [Header("Live Data")] [SerializeField] private double bpm = 120.0;
-        public double songOffset = 0.0;
+        public double songOffset;
 
         // Timing
         private double _dspSongStart;
@@ -21,7 +21,7 @@ namespace Zyntra.Audio
         public bool IsPlaying { get; private set; }
 
         public double BPM => bpm;
-        public double secPerBeat => bpm > 0 ? 60.0 / bpm : 0.0;
+        public double SecPerBeat => bpm > 0 ? 60.0 / bpm : 0.0;
 
         [Header("Timeline")] public List<TimelineObject> TimelineObjects = new();
         private int _nextObjectIndex;
@@ -100,9 +100,9 @@ namespace Zyntra.Audio
                 _nextObjectIndex++;
             }
 
-            if (!(secPerBeat > 0)) return;
+            if (!(SecPerBeat > 0)) return;
             var timeSinceChange = CurrentSongTime - _timeAtLastBPMChange;
-            CurrentBeat = _beatOffset + timeSinceChange / secPerBeat;
+            CurrentBeat = _beatOffset + timeSinceChange / SecPerBeat;
         }
 
         /// <summary>
@@ -112,10 +112,10 @@ namespace Zyntra.Audio
         /// <param name="eventTimestamp">When the change happens</param>
         public void UpdateBPM(double newBPM, double eventTimestamp)
         {
-            if (secPerBeat > 0)
+            if (SecPerBeat > 0)
             {
                 var timeSinceLastChange = eventTimestamp - _timeAtLastBPMChange;
-                _beatOffset += timeSinceLastChange / secPerBeat;
+                _beatOffset += timeSinceLastChange / SecPerBeat;
             }
 
             _timeAtLastBPMChange = eventTimestamp;

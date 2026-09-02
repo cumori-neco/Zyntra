@@ -8,13 +8,13 @@ namespace Zyntra.Player
         [Header("General Information")] public string gameName;
 
         [Space] [Header("Game Rules")] public double noteSpeed = 6.0;
-        
+
         [Tooltip("Cut the combo if a \"Good\" judgement is made.")]
         public bool comboBreakOnGood = true;
 
         [Tooltip("If the game will use the health system or not.")]
-        public bool useHealth = false;
-        
+        public bool useHealth;
+
         public int defaultHealth = 1000;
         public int maxHealth = 2000;
         public int healthDamage = 100;
@@ -33,6 +33,5 @@ namespace Zyntra.Player
         /// </summary>
         [Tooltip("How the client will handle game death once HP goes zero.")]
         public DeathTrigger deathTrigger = DeathTrigger.Ignore;
-        
     }
 }

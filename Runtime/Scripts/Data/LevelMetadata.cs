@@ -7,7 +7,7 @@ namespace Zyntra.Data
     {
         public string name;
         public string romanizedName;
-        
+
         public string author;
         public string gameName;
 

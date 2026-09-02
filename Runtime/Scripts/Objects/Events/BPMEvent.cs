@@ -8,24 +8,24 @@ namespace Zyntra.Objects.Events
     public class BPMEvent : Event
     {
         public double targetBPM;
-        private Conductor conductor;
+        private Conductor _conductor;
 
         public override void EventAction()
         {
-            conductor = ZyntraPlayerManager.AudioConductor;
-            if (conductor != null)
-                conductor.UpdateBPM(targetBPM, time);
+            _conductor = ZyntraPlayerManager.AudioConductor;
+            if (_conductor != null)
+                _conductor.UpdateBPM(targetBPM, time);
         }
-        
+
         // For my old code
         public BPMEvent()
         {
         }
 
-        public BPMEvent(double BPM, double time)
+        public BPMEvent(double bpm, double time)
         {
-            targetBPM = BPM;
-	    time = time;
+            targetBPM = bpm;
+            this.time = time;
         }
     }
 }

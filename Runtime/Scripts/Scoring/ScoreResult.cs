@@ -20,10 +20,10 @@ namespace Zyntra.Scoring
         /// This value should not be negative.
         /// </summary>
         public uint Score { get; set; }
-        
+
         public uint Combo { get; set; }
         public uint MaxCombo { get; set; }
-        
+
         public bool IsFailed { get; set; }
 
         private readonly uint _noteCount;
@@ -48,8 +48,8 @@ namespace Zyntra.Scoring
             Combo = 0;
             MaxCombo = 0;
         }
-        
-        public ScoreResult(LevelData lvl,  uint objCount)
+
+        public ScoreResult(LevelData lvl, uint objCount)
         {
             _noteCount = objCount;
 
@@ -78,7 +78,7 @@ namespace Zyntra.Scoring
             Score = 0;
             Accuracy = 0f;
             Combo = 0;
-            MaxCombo = 0; 
+            MaxCombo = 0;
         }
 
         public void AddJudgement(JudgementType type)
@@ -96,21 +96,21 @@ namespace Zyntra.Scoring
             };
 
             _currentRawScore += _scorePerPerfect * weight;
-            
+
             Score = (uint)Math.Round(_currentRawScore);
-            
+
             _currentRawAcc += _accPerPerfect * weight;
-            
+
             Accuracy = (float)_currentRawAcc;
-            
-            if(weight == 0 || (weight == 0.25 && ZyntraPlayerManager.Settings.comboBreakOnGood))
+
+            if (weight == 0 || (weight == 0.25 && ZyntraPlayerManager.Settings.comboBreakOnGood))
             {
                 Combo = 0;
             }
             else
             {
                 Combo++;
-                if(Combo > MaxCombo) MaxCombo = Combo;
+                if (Combo > MaxCombo) MaxCombo = Combo;
             }
         }
     }

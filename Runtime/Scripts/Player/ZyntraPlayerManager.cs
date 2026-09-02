@@ -15,8 +15,8 @@ namespace Zyntra.Player
         [SerializeField] private HitWindow hitWindow;
         public static HitWindow HitWindow;
 
-        public static ScoreResult currentScore;
-        public static LevelData levelData;
+        public static ScoreResult CurrentScore;
+        public static LevelData LevelData;
 
         public int health = 1000;
 
@@ -25,7 +25,7 @@ namespace Zyntra.Player
             // The static variables
             Settings = gameSettings;
             AudioConductor = audioConductor;
-            currentScore = new ScoreResult(levelData);
+            CurrentScore = new ScoreResult(LevelData);
             HitWindow = hitWindow;
             health = gameSettings.defaultHealth;
         }

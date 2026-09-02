@@ -14,14 +14,14 @@ namespace Zyntra.Audio
                 Debug.LogError($"[Zyntra] Audio file not found : {filePath}");
                 return null;
             }
-            
+
             var audioType = GetAudioType(filePath);
             if (audioType == AudioType.UNKNOWN)
             {
                 Debug.LogError($"[Zyntra] Unsupported audio extension : {filePath}");
                 return null;
             }
-            
+
             var formattedPath = "file://" + Path.GetFullPath(filePath);
 
             using (var www = UnityWebRequestMultimedia.GetAudioClip(formattedPath, audioType))
@@ -38,7 +38,7 @@ namespace Zyntra.Audio
                     Debug.LogError($"[Zyntra] Audio load failed :  {www.error}");
                     return null;
                 }
-                
+
                 var audio = DownloadHandlerAudioClip.GetContent(www);
                 audio.name = Path.GetFileNameWithoutExtension(filePath);
                 return audio;

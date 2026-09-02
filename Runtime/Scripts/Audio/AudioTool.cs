@@ -25,6 +25,6 @@ namespace Zyntra.Audio
         public static double GetTimeDistance(double a, double b)
         {
             return a - b;
-        } 
+        }
     }
 }
