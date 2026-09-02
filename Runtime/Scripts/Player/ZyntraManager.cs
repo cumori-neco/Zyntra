@@ -7,7 +7,7 @@ namespace Zyntra.Player
     {
         public static ZyntraManager Instance;
 
-        private void Start()
+        private void Awake()
         {
             if(Instance != null) Destroy(gameObject);
             
