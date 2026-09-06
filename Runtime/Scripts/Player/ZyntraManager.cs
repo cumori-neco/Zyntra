@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zyntra.Data;
 
 namespace Zyntra.Player
 {
@@ -11,6 +12,7 @@ namespace Zyntra.Player
             if (Instance != null) Destroy(gameObject);
 
             Instance = this;
+            LevelDatabase.Reindex(); // 👍
         }
     }
 }
