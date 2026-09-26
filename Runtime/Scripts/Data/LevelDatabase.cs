@@ -83,7 +83,7 @@ namespace Zyntra.Data
                 var metadataPath = Path.Combine(dirPath, "metadata.json");
                 if (File.Exists(metadataPath))
                 {
-                    var meta = DataManager.LoadMetadata(metadataPath);
+                    var meta = DataManager.LoadMetadata(File.ReadAllText(metadataPath));
 
                     if (meta == null) continue;
 

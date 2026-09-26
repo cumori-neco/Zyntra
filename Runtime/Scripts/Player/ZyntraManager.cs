@@ -11,8 +11,10 @@ namespace Zyntra.Player
         {
             if (Instance != null) Destroy(gameObject);
 
+            DontDestroyOnLoad(gameObject);
+
             Instance = this;
-            LevelDatabase.Reindex(); // 👍
+            LevelDatabase.Reindex();
         }
     }
 }
