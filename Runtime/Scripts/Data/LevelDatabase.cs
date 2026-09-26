@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using UnityEngine;
 
 namespace Zyntra.Data
@@ -8,6 +9,8 @@ namespace Zyntra.Data
     public class LevelDatabase
     {
         public static string RootPath => Path.Combine(Application.persistentDataPath, "Zyntra");
+        public static string LevelPath => Path.Combine(RootPath, "Levels");
+        public static string ExportPath => Path.Combine(RootPath, "Exports");
         public static string CachePath => Path.Combine(RootPath, "zyntra_index_cache.json");
 
         [Serializable]
@@ -32,6 +35,7 @@ namespace Zyntra.Data
             if (!Directory.Exists(RootPath))
             {
                 Directory.CreateDirectory(RootPath);
+                Directory.CreateDirectory(LevelPath);
 
                 var warning = File.CreateText(Path.Combine(RootPath, "README.txt"));
                 warning.WriteLine("WARNING: THIS FOLDER CONTAINS CRITICAL FILES TO THE GAME\n" +
@@ -63,7 +67,7 @@ namespace Zyntra.Data
             List<LevelMetadata> loadedList = new();
             var isDirty = false;
 
-            var levelDirectories = Directory.GetDirectories(RootPath);
+            var levelDirectories = Directory.GetDirectories(LevelPath);
 
             foreach (var dirPath in levelDirectories)
             {
@@ -114,6 +118,42 @@ namespace Zyntra.Data
             else
             {
                 Debug.Log($"[Zyntra] LevelDatabase initialized from cache ({_loadedMetadata.Count} levels).");
+            }
+        }
+
+        public void ImportLevel(string filename)
+        {
+            if (!File.Exists(filename) || filename == string.Empty)
+            {
+                Debug.LogError("[Zyntra] Failed to import level. (File not found or empty string)");
+                return;
+            }
+
+            try
+            {
+                ZipFile.ExtractToDirectory(filename, LevelPath);
+                Reindex();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[Zyntra] Failed to import level : {e.Message}");
+            }
+        }
+
+        public void ExportLevel(string lvlDirectory)
+        {
+            if (!Directory.Exists(lvlDirectory))
+            {
+                Debug.LogError("[Zyntra] Failed to export level. (Directory not found or empty string)");
+            }
+
+            try
+            {
+                ZipFile.CreateFromDirectory(lvlDirectory, ExportPath);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[Zyntra] Failed to export level : {e.Message}");
             }
         }
     }
